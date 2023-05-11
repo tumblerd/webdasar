@@ -10,13 +10,32 @@
 </head>
 <body>
     <div class="col-lg-4 col-xx-4 my-5 mx-auto">
-        <h1 class="text-center mb-5">TAMBAH DATA DIRI</h1>
+        <h1 class="text-center mb-5">UBAH DATA DIRI</h1>
 
         <?php
-
-            if (isset($_POST['tambah'])) {
+            if(isset($_GET['id'])){
+                $id = $_GET['id'];
 
                 require_once "./conn.php";
+
+                $sql = "SELECT * FROM `data_diri` WHERE id='$id' ";
+
+            if ($result = mysqli_query($conn, $sql)) {
+
+                while($data_diri = mysqli_fetch_array($result)) {
+                    $nim            = $data_diri['nim'];
+                    $nama           = $data_diri['nama'];
+                    $jenis_kelamin  = $data_diri['jenis_kelamin'];
+                    $tempat_lahir   = $data_diri['tempat_lahir'];
+                    $tanggal_lahir  = $data_diri['tanggal_lahir'];
+                    $alamat         = $data_diri['alamat'];
+
+                }
+            }
+            }
+
+            if (isset($_POST['simpan'])){
+                
 
                 $nim            = $_POST['nim'];
                 $nama           = $_POST['nama'];
@@ -25,27 +44,31 @@
                 $tanggal_lahir  = $_POST['tanggal_lahir'];
                 $alamat         = $_POST['alamat'];
 
-                $sql = "INSERT INTO `data_diri`
-                        (`nim`,`nama`,`jenis_kelamin`,`tempat_lahir`,`tanggal_lahir`,`alamat`) 
-                        VALUES
-                        ('$nim','$nama','$jenis_kelamin','$tempat_lahir','$tanggal_lahir','$alamat')";
+                require_once "./conn.php";
+                
+                $sql = "UPDATE `data_diri` SET
+                        `nim`='$nim',`nama`='$nama',`jenis_kelamin`='$jenis_kelamin',`tempat_lahir`='$tempat_lahir',`tanggal_lahir`='$tanggal_lahir',`alamat`='$alamat'
+                        WHERE `id`='$id'"; 
 
                 if (mysqli_query($conn, $sql)) {
+
         ?>
 
-            <div class="alert alert-success" role="alert">
-                <i class="bi bi-info-circle"></i> Data Berhasil Ditambah.<a class="btn btn-link" href="./">Halaman Utama</a>
-            </div>
-
+                <div class="alert alert-success" role="alert">
+                    <i class="bi bi-info-circle"></i> Data Berhasil Diubah.<a class="btn btn-link" href="./">Halaman Utama</a>
+                </div>
+        
         <?php
                 }
             }
+                
         ?>
 
-        <form class="row needs-validation" action="tambah.php" method="post" novalidate>
+        <?php if(isset($_GET['id'])): ?>
+        <form class="row needs-validation" action="ubah.php" method="post" novalidate>
             <div class="col-md-12">
                 <label for="validationCustom01" class="form-label mt-3">NIM</label>
-                <input type="text" class="form-control" id="validationCustom01" placeholder="Masukkan 8 digit NIM" name="nim" required>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="Masukkan 8 digit NIM" name="nim" value="<?php echo $nim; ?>" required>
                     <div class="valid-feedback">
                         Nice!
                     </div>
@@ -53,7 +76,7 @@
 
             <div class="col-md-12">
                 <label for="validationCustom02" class="form-label mt-3">NAMA</label>
-                <input type="text" class="form-control" id="validationCustom02" name="nama" required>
+                <input type="text" class="form-control" id="validationCustom02" name="nama" value="<?php echo $nama; ?>" required>
                     <div class="valid-feedback">
                         Nice!
                     </div>
@@ -61,7 +84,7 @@
 
             <div class="col-md-12">
                 <label for="validationCustom03" class="form-label mt-3">JENIS KELAMIN</label>
-                <select class="form-select" id="validationCustom03" name="jenis_kelamin" required>
+                <select class="form-select" id="validationCustom03" name="jenis_kelamin" value="<?php echo $jenis_kelamin; ?>" required>
                         <option selected disabled value="">Pilih...</option>
                         <option value="Laki-Laki">Laki-laki</option>
                         <option value="Perempuan">Perempuan</option>
@@ -73,7 +96,7 @@
 
             <div class="col-md-12">
                 <label for="validationCustom04" class="form-label mt-3">TEMPAT LAHIR</label>
-                <input type="text" class="form-control" id="validationCustom04" name="tempat_lahir" required>
+                <input type="text" class="form-control" id="validationCustom04" name="tempat_lahir" value="<?php echo $tempat_lahir; ?>" required>
                     <div class="valid-feedback">
                         Nice!
                     </div>
@@ -81,7 +104,7 @@
 
             <div class="col-md-12">
                 <label for="validationCustom05" class="form-label mt-3">TANGGAL LAHIR</label>
-                <input type="text" class="form-control" id="validationCustom05" name="tanggal_lahir" placeholder="YYYY-MM-DD"required>
+                <input type="text" class="form-control" id="validationCustom05" name="tanggal_lahir" placeholder="YYYY-MM-DD" value="<?php echo $tanggal_lahir; ?>" required>
                     <div class="valid-feedback">
                         Nice!
                     </div>
@@ -89,41 +112,21 @@
 
             <div class="col-md-12">
                 <label for="validationCustom06" class="form-label mt-3">ALAMAT</label>
-                <textarea class="form-control" id="validationCustom06" name="alamat" required></textarea>
-                <div class="valid-feedback">
-                Nice!
-                </div>
+                <textarea class="form-control" id="validationCustom06" name="alamat" value="<?php echo $alamat; ?>" required></textarea>
+                    <div class="valid-feedback">
+                        Nice!
+                    </div>
             </div>
 
             <div class="mt-3">
-            <button class="btn btn-primary btn-large" type="submit" name="tambah" value="Tambah">Tambah</button>
+            <button class="btn btn-primary btn-large" type="submit" name="simpan" value="Simpan">Simpan</button>
             </div>
 
         </form>
+        <?php endif; ?>
     </div>
 
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (() => {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-
-            form.classList.add('was-validated')
-            }, false)
-        })
-        })()
-    </script>
 </body>
 </html>

@@ -17,10 +17,10 @@
         <div id = "main" class="d-grid gap-2">
 
             <?php 
-                // menyematkan modul koneksi database 
+                // menyematkan koneksi dengan MySQL 
                 require_once "./conn.php"; 
             
-                $sql = "SELECT * FROM `data_diri`";
+                $sql = "SELECT * FROM `data_diri` ";
             ?>
         
         <table class="table table-striped">
@@ -44,6 +44,8 @@
                     $no = 1;
 
                     if($result = mysqli_query($conn, $sql)) {
+                        
+                        // tampilkan data satu persatu
                         while ($row = mysqli_fetch_assoc($result)) {
                 ?>
 
@@ -56,8 +58,8 @@
                 <td><?php echo $row['tempat_lahir'] ?></td>
                 <td><?php echo $row['tanggal_lahir'] ?></td>
                 <td><?php echo $row['alamat'] ?></td>
-                <td><a class="btn btn-small btn-warning" href="./edit.php"><i class="bi bi-pencil-square"></i> Ubah</a> | 
-                    <a class="btn btn-small btn-danger" href="./hapus.php"><i class="bi bi-trash"></i> Hapus</a></td>
+                <td><a class="btn btn-small btn-warning" href="ubah.php?id=<?= $row['id'] ?>"><i class="bi bi-pencil-square"></i> Ubah</a> | 
+                    <a class="btn btn-small btn-danger" href="hapus.php?id=<?= $row['id'] ?>"><i class="bi bi-trash"></i> Hapus</a></td>
             </tr>
 
         <?php
